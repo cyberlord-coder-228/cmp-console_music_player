@@ -10,11 +10,9 @@ struct Node
     struct Node* next;
 };
 
-typedef struct Node* dll;
-
 // GLOBALS
 unsigned int LIST_LENGTH = 0;
-// struct Node* LAST_REF = NULL;
+// struct Node* LAST_REF = NULL; // may be needed, but now its not
 
 // functions
 struct Node* alloc_node(char* loc, struct Node* prev, struct Node* next)
