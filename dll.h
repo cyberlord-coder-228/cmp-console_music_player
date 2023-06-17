@@ -1,3 +1,6 @@
+#ifndef MY_DLL_H
+#define MY_DLL_H
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -14,3 +17,5 @@ extern unsigned int LIST_LENGTH;
 struct Node* alloc_node(char* loc, struct Node* prev, struct Node* next);
 void append_node(struct Node* base_ref, char* value);
 unsigned int get_length(struct Node* start_ref);
+
+#endif /*MY_DLL_H*/
