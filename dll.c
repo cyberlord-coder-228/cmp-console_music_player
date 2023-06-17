@@ -36,3 +36,17 @@ void append_node(struct Node* base_ref, char* value)
     LIST_LENGTH++;
     // LAST_REF = new_end_ref;
 }
+
+unsigned int get_length(struct Node* start_ref)
+{
+    struct Node* local_ref = start_ref;
+    unsigned int result = 0;
+
+    while (local_ref != NULL)
+    {
+        result++;
+        local_ref = local_ref->next;
+    }
+
+    return result;
+}

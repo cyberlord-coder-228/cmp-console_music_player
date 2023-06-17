@@ -23,8 +23,19 @@ static void node_appending_test(void** state)
     struct Node* test_node_ref = alloc_node("a", NULL, NULL);
     append_node(test_node_ref, "b");
 
-    assert_string_equal(test_node_ref->next->file_name, "b");
     assert_string_equal(test_node_ref->next->prev->file_name, "a");
+    assert_string_equal(test_node_ref->next->file_name, "b");
+}
+
+static void dll_get_length_test(void** state)
+{
+    struct Node* test_node_ref = alloc_node("a", NULL, NULL);
+    append_node(test_node_ref, "b");
+    append_node(test_node_ref->next, "c");
+
+    unsigned int l = get_length(test_node_ref);
+    assert_int_equal(l, 3);
+
 }
 
 int main()
@@ -33,6 +44,8 @@ int main()
         cmocka_unit_test(globals_exist_test),
         cmocka_unit_test(node_allocation_test),
         cmocka_unit_test(node_appending_test),
+        cmocka_unit_test(dll_get_length_test),
+
     };
  
     return cmocka_run_group_tests(tests, NULL, NULL);
