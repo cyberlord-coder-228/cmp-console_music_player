@@ -1,10 +1,20 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <errno.h>
+extern int errno;
 
 #include "dll.h"
 
-char** alloc_arr(unsigned int length)
+// data type
+typedef struct
+{
+    char** array;
+    unsigned int length;
+} arr_cl;
+
+// functions
+char** _alloc_arr_(unsigned int length)
 {
     // note: max file name in linux is 255 chars
     char** result = (char**)malloc(length*256*sizeof(char));
@@ -12,17 +22,31 @@ char** alloc_arr(unsigned int length)
     return result;
 }
 
-char** arrayify(struct Node* start_ref)
+arr_cl alloc_arr_cl(unsigned int length)
+{
+    arr_cl result;
+    result.array = _alloc_arr_(length);
+    result.length = length;
+    return result;
+}
+
+arr_cl arrayify(struct Node* start_ref)
 {
     unsigned int length = get_length(start_ref);
+    if (length == 0)
+    {
+        perror("Trying to arrayify NULL");
+        return alloc_arr_cl(0);
+    }
 
-    char** result = alloc_arr(length);
+    // char** result = alloc_arr(length);
+    arr_cl result = alloc_arr_cl(length);
 
     struct Node* local_node = start_ref;
     int i = 0;
     while (local_node != NULL)
     {
-        strcpy(result[i], local_node->file_name);
+        strcpy(result.array[i], local_node->file_name);
         
         local_node = local_node->next;
         i++;
@@ -31,13 +55,15 @@ char** arrayify(struct Node* start_ref)
     return result;
 }
 
-// void main()
-// {
-//     struct Node* test_node_ref = alloc_node("a", NULL, NULL);
-//     append_node(test_node_ref, "b");
+void _print_arr_(char** arr, unsigned int length)
+{
+    for (int i = 0; i < length; i++)
+    {
+        printf("[%d]:\t%s\n", i, arr[i]);
+    }
+}
 
-//     char** r = arrayify(test_node_ref);
-
-//     printf("%s\n", r[0]);
-//     printf("%s\n", r[1]);
-// }
+void print_arr_cl(arr_cl arr)
+{
+    _print_arr_(arr.array, arr.length);
+}
