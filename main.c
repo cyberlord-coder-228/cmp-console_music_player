@@ -2,12 +2,11 @@
 #include <unistd.h>
 #include <limits.h>
 
-#include "dll.h"
 #include "array.h"
 #include "find_music.h"
 #include "play_music.h"
 
-void main(int argc, char *argv[])
+int main(int argc, char** argv)
 {
     char working_directory[PATH_MAX];
 
@@ -19,7 +18,7 @@ void main(int argc, char *argv[])
     else
     {
         perror("getcwd");
-        return;
+        return EXIT_FAILURE;
     }
 
     arr_cl music_arr = search_music(working_directory);
@@ -31,8 +30,10 @@ void main(int argc, char *argv[])
 
     for (int i = 0; i < music_arr.length; i++)
     {
-        play_flac(music_arr.array[0]);
+        play_music(music_arr.array[i]);
     }
 
     exit_alsa();
+
+    return EXIT_SUCCESS;
 }

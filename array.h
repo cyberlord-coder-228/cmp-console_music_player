@@ -1,17 +1,14 @@
 #ifndef MY_ARRAY_H
 #define MY_ARRAY_H
 
+#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include "dll.h"
 
-typedef struct
-{
-    char** array;
-    unsigned int length;
-} arr_cl;
+typedef struct { char** array; unsigned int length; } arr_cl;
 
 arr_cl alloc_arr_cl(unsigned int length);
 arr_cl arrayify(struct Node* start_ref);

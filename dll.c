@@ -1,13 +1,12 @@
+#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <errno.h>
-extern int errno;
 
-// types
+// type
 struct Node
 {
-    char file_name[256]; // max file name length is 255
+    char file_name[PATH_MAX];
     struct Node* prev;
     struct Node* next;
 };
@@ -31,7 +30,7 @@ struct Node* get_last(struct Node* start_ref)
 {
     if (start_ref == NULL)
     {
-        printf("get_last was called on an empty list\n");
+        fprintf(stderr, "get_last was called on an empty list\n");
         return NULL;
     }
 
@@ -59,27 +58,23 @@ void append_node(struct Node* base_ref, char* value)
 {
     if (base_ref == NULL)
     {
-        perror("In append_node, base_ref is NULL");
+        fprintf(stderr, "In append_node, base_ref is NULL\n");
         return;
     }
 
-    struct Node* new_end_ref = alloc_node(value, base_ref, NULL);
-    if (base_ref != NULL)
-    {
-        base_ref->next = new_end_ref;
-    }
+    base_ref->next = alloc_node(value, base_ref, NULL);
 }
 
 void append_list(struct Node* base_ref, struct Node* upbuild_ref)
 {
     if (base_ref == NULL)
     {
-        perror("In append_list, base_ref is NULL");
+        fprintf(stderr, "In append_list, base_ref is NULL\n");
         return;
     }
     if (upbuild_ref == NULL)
     {
-        perror("In append_list, upbuild_ref is NULL");
+        fprintf(stderr, "In append_list, upbuild_ref is NULL\n");
         return;
     }
 
@@ -87,8 +82,14 @@ void append_list(struct Node* base_ref, struct Node* upbuild_ref)
     struct Node* working_node_ref = upbuild_ref;
     while (working_node_ref != NULL)
     {
-        if (the_last_ref == NULL) printf("Fuck %d\n", the_last_ref);
+        if (the_last_ref == NULL)
+        {
+            fprintf(stderr, "In append_list, invalid get_last call\n");
+            return;
+        }
+        // append one by one
         append_node(the_last_ref, working_node_ref->file_name);
+        // move to the next
         the_last_ref = the_last_ref->next;
         working_node_ref = working_node_ref->next;
     }

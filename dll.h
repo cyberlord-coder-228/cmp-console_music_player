@@ -1,14 +1,14 @@
 #ifndef MY_DLL_H
 #define MY_DLL_H
 
+#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <errno.h>
 
 struct Node
 {
-    char file_name[256]; // max file name length is 255
+    char file_name[PATH_MAX];
     struct Node* prev;
     struct Node* next;
 };

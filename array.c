@@ -1,24 +1,21 @@
+#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <errno.h>
-extern int errno;
 
 #include "dll.h"
 
 // data type
-typedef struct
-{
-    char** array;
-    unsigned int length;
-} arr_cl;
+typedef struct { char** array; unsigned int length; } arr_cl;
 
 // functions
 char** _alloc_arr_(unsigned int length)
 {
-    // note: max file name in linux is 255 chars
-    char** result = (char**)malloc(length*256*sizeof(char));
-    for (int i = 0; i < length; i++) result[i] = (char*)malloc(256*sizeof(char));
+    char** result = (char**)malloc(length*PATH_MAX*sizeof(char));
+    for (int i = 0; i < length; i++)
+    {
+        result[i] = (char*)malloc(PATH_MAX*sizeof(char));
+    }
     return result;
 }
 
@@ -35,7 +32,7 @@ arr_cl arrayify(struct Node* start_ref)
     unsigned int length = get_length(start_ref);
     if (length == 0)
     {
-        perror("Trying to arrayify NULL");
+        printf("WARNING: Arrayifying NULL\n");
         return alloc_arr_cl(0);
     }
 
@@ -45,8 +42,10 @@ arr_cl arrayify(struct Node* start_ref)
     int i = 0;
     while (local_node != NULL)
     {
+        // copy value
         strcpy(result.array[i], local_node->file_name);
         
+        // move to next
         local_node = local_node->next;
         i++;
     }

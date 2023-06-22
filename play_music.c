@@ -1,19 +1,13 @@
+#include <alsa/asoundlib.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <FLAC/stream_decoder.h>
-#include <alsa/asoundlib.h>
 
 // ALSA
 const char* DEVICE = "default";
 snd_pcm_t* PCM_HANDLE;
 snd_pcm_hw_params_t* PARAMS;
 snd_pcm_uframes_t FRAMES;
-
-void alsa_error(const char *message, int error)
-{
-    fprintf(stderr, "%s: %s\n", message, snd_strerror(error));
-    exit(EXIT_FAILURE);
-}
 
 int init_alsa()
 {
@@ -52,8 +46,8 @@ int init_alsa()
     }
 
     // Enable resampling
-    unsigned int resample = 1;
-    e = (PCM_HANDLE, PARAMS, resample);
+    unsigned int resample = 1; // 1 for enable, 0 for disable
+    e = snd_pcm_hw_params_set_rate_resample(PCM_HANDLE, PARAMS, resample);
     if (e < 0)
     {
         fprintf(stderr, "Cannot set resampling: %s\n", snd_strerror(e));
@@ -109,25 +103,6 @@ int init_alsa()
     // Get the number of frames per period
     snd_pcm_hw_params_get_period_size(PARAMS, &FRAMES, 0);
 
-    // // Thats simpler way, but it does not work
-    // unsigned int channels = 2;
-    // unsigned int rate = 44100;
-    // int resample = 1; // allow resampling
-    // unsigned int latency = 50000;
-    // e = snd_pcm_set_params(
-    //     PCM_HANDLE,
-    //     SND_PCM_FORMAT_U8,
-    //     SND_PCM_ACCESS_RW_INTERLEAVED,
-    //     channels,
-    //     rate,
-    //     resample,
-    //     latency
-    // );
-    // if (e < 0)
-    // {
-    //     fprintf(stderr, "Cannot set parameters: %s\n", snd_strerror(e));
-    // }
-
     return 1;
 }
 
@@ -152,8 +127,6 @@ FLAC__StreamDecoderWriteStatus _write_callback_(
     void* client_data
 )
 {
-    int err;
-
     unsigned int channels = frame->header.channels;
     unsigned int samples = frame->header.blocksize;
 
@@ -172,13 +145,9 @@ FLAC__StreamDecoderWriteStatus _write_callback_(
     // Write the decoded frame to the ALSA PCM device
     snd_pcm_sframes_t written = 0;
     
-        written = snd_pcm_writei(PCM_HANDLE, data, samples);
+    written = snd_pcm_writei(PCM_HANDLE, data, samples);
 
-        if (written < 0)
-        {
-            if (err == -EPIPE) alsa_error("underrun occurred", err);
-            else alsa_error("error writing to PCM device", err);
-        }
+    if (written < 0) fprintf(stderr, "Error writing to PCM device");
 
     return FLAC__STREAM_DECODER_WRITE_STATUS_CONTINUE;
 }
@@ -212,14 +181,14 @@ FLAC__StreamDecoderInitStatus _init_flac_for_(const char* filename)
     {
         fprintf(
             stderr,
-            "Could not init flac decoder: %s\n",
+            "Could not init flac decoder: %d\n",
             status
         );
     }
     return status;
 }
 
-void play_flac(const char* filename)
+void _play_flac_(const char* filename)
 {
     _init_flac_for_(filename);
 
@@ -232,4 +201,34 @@ void play_flac(const char* filename)
     // Clean up
     FLAC__stream_decoder_finish(DECODER);
     FLAC__stream_decoder_delete(DECODER);
+}
+
+// GENERALISED
+void play_music(const char* music_file_name)
+{
+    char* dot_end = strrchr(music_file_name, '.');
+    if (!dot_end)
+    {
+        fprintf(stderr, "Not a valid file format\n");
+    }
+
+    if (strcmp(dot_end, ".flac") == 0)
+    {
+        _play_flac_(music_file_name);
+        return;
+    }
+
+    if (strcmp(dot_end, ".mp3") == 0)
+    {
+        printf(".mp3 not supported yet\n");
+        return;
+    }
+
+    if (strcmp(dot_end, ".mpv") == 0)
+    {
+        printf(".mpv not supported yet\n");
+        return;
+    }
+    
+    printf("Unsupported file format\n");
 }
