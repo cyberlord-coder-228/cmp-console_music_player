@@ -60,7 +60,7 @@ struct Node* _search_music_(char* path)
             if (
                 dot_end && (
                     !strcmp(dot_end, ".flac")
-                    || !strcmp(dot_end, ".mp3")
+                    // || !strcmp(dot_end, ".mp3")
                     // can add more file extensions here
                 )
             )
@@ -99,15 +99,4 @@ struct Node* _search_music_(char* path)
 arr_cl search_music(char* path)
 {
     return arrayify(_search_music_(path));
-}
-
-void main()
-{
-    // char search_path[256] = "/run/media/vlad"; // thats my external drive
-    char search_path[256] = "./music"; // thats my test folder
-
-    arr_cl music_arr = search_music(search_path);
-
-    printf("Music found at %s: \n", search_path);
-    print_arr_cl(music_arr);
 }

@@ -13,8 +13,6 @@ struct Node
     struct Node* next;
 };
 
-// extern unsigned int LIST_LENGTH;
-
 unsigned int get_length(struct Node* start_ref);
 struct Node* get_last(struct Node* start_ref);
 struct Node* alloc_node(char* loc, struct Node* prev, struct Node* next);

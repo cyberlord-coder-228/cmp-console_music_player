@@ -233,15 +233,3 @@ void play_flac(const char* filename)
     FLAC__stream_decoder_finish(DECODER);
     FLAC__stream_decoder_delete(DECODER);
 }
-
-
-void main()
-{
-    const char *test_file = "./music/bell.flac";
-
-    init_alsa();
-
-    play_flac(test_file);
-
-    exit_alsa();
-}

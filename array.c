@@ -39,7 +39,6 @@ arr_cl arrayify(struct Node* start_ref)
         return alloc_arr_cl(0);
     }
 
-    // char** result = alloc_arr(length);
     arr_cl result = alloc_arr_cl(length);
 
     struct Node* local_node = start_ref;
