@@ -133,9 +133,9 @@ FLAC__StreamDecoderWriteStatus _write_callback_(
     // Convert double track signal to interleaved
     // eg { left(32): AAAA, right(32): BBBB } -> data(16): ABABABAB
     int16_t* data = (int16_t*)malloc(channels*samples*sizeof(int16_t));
-    for (int s = 0; s < samples; s++)
+    for (unsigned int s = 0; s < samples; s++)
     {
-        for (int ch = 0; ch < channels; ch++)
+        for (unsigned int ch = 0; ch < channels; ch++)
         {
             int pos = channels*s + ch;
             data[pos] = (int16_t)(buffer[ch][s]);

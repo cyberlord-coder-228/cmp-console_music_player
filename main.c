@@ -17,7 +17,7 @@ int main(int argc, char** argv)
     }
     else
     {
-        perror("getcwd");
+        fprintf(stderr, "In main, cannot get cwd\n");
         return EXIT_FAILURE;
     }
 
@@ -28,7 +28,7 @@ int main(int argc, char** argv)
 
     init_alsa();
 
-    for (int i = 0; i < music_arr.length; i++)
+    for (unsigned int i = 0; i < music_arr.length; i++)
     {
         play_music(music_arr.array[i]);
     }

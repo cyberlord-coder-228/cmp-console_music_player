@@ -56,15 +56,7 @@ struct Node* _search_music_(char* path)
         {
             // check if the file is a music file
             char *dot_end = strrchr(entry->d_name, '.');
-            if (!dot_end)
-            {
-                fprintf(
-                    stderr,
-                    "Invalid type format in _search_music_:\n%s/%s\n",
-                    path,
-                    entry->d_name
-                );
-            }
+            if (!dot_end) continue;
 
             if (
                 strcmp(dot_end, ".flac") == 0

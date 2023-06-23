@@ -12,7 +12,7 @@ typedef struct { char** array; unsigned int length; } arr_cl;
 char** _alloc_arr_(unsigned int length)
 {
     char** result = (char**)malloc(length*PATH_MAX*sizeof(char));
-    for (int i = 0; i < length; i++)
+    for (unsigned int i = 0; i < length; i++)
     {
         result[i] = (char*)malloc(PATH_MAX*sizeof(char));
     }
@@ -55,7 +55,7 @@ arr_cl arrayify(struct Node* start_ref)
 
 void _print_arr_(char** arr, unsigned int length)
 {
-    for (int i = 0; i < length; i++)
+    for (unsigned int i = 0; i < length; i++)
     {
         printf("[%d]:\t%s\n", i, arr[i]);
     }
