@@ -1,2 +1,6 @@
 # ignore music for testing
 music/
+
+# ignore build files
+cmp
+test
